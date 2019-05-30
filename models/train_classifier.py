@@ -1,16 +1,60 @@
 import sys
+from sqlalchemy import create_engine
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from io import StringIO
+import pandas as pd
+import numpy as np
+import re
+import pickle
+
+import nltk
+nltk.download(['punkt', 'wordnet','stopwords'])
+
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report,accuracy_score
 
 
 def load_data(database_filepath):
-    pass
-
+    engine = create_engine(database_filepath)
+    df = pd.read_sql_table('InsertTableName',engine)
+    #df.head()
+    X = df['message'] 
+    Y = df.drop(['id', 'message', 'original', 'genre'], axis = 1)
+    return X,Y
 
 def tokenize(text):
-    pass
+    # step 1 clean text, remove punctuation and turn into lower cases
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower()) 
+    # tokenize 
+    words = word_tokenize(text)
+    # remove stop words
+    words = [w for w in words if w not in stopwords.words("english")]
+    # Stem word tokens
+    stemmed = [PorterStemmer().stem(w) for w in words]
+    return stemmed
 
 
-def build_model():
-    pass
+def build_model(X_train, Y_train):
+    pipeline = Pipeline([
+    ('vect', CountVectorizer(tokenizer = tokenize)),
+    ('tfidf', TfidfTransformer()),
+    ('clf', MultiOutputClassifier(RandomForestClassifier()))
+    ])
+    
+    parameters = {'vect__min_df': [1, 5],
+              'tfidf__use_idf':[True, False],
+              'clf__estimator__n_estimators':[10, 20]}
+
+    cv = GridSearchCV(pipeline, param_grid = parameters,verbose = 3)
+    np.random.seed(81)
+    tuned_model = cv.fit(X_train, Y_train)
+    return tuned_model
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
@@ -18,7 +62,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
-    pass
+    pickle.dump(model, open(model_filepath, 'wb'))
 
 
 def main():

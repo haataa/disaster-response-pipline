@@ -26,7 +26,8 @@ def load_data(database_filepath):
     #df.head()
     X = df['message'] 
     Y = df.drop(['id', 'message', 'original', 'genre'], axis = 1)
-    return X,Y
+    category_names = df.columns[-36:]
+    return X,Y,category_names
 
 def tokenize(text):
     # step 1 clean text, remove punctuation and turn into lower cases
@@ -40,7 +41,7 @@ def tokenize(text):
     return stemmed
 
 
-def build_model(X_train, Y_train):
+def build_model():
     pipeline = Pipeline([
     ('vect', CountVectorizer(tokenizer = tokenize)),
     ('tfidf', TfidfTransformer()),
@@ -51,14 +52,28 @@ def build_model(X_train, Y_train):
               'tfidf__use_idf':[True, False],
               'clf__estimator__n_estimators':[10, 20]}
 
-    cv = GridSearchCV(pipeline, param_grid = parameters,verbose = 3)
-    np.random.seed(81)
-    tuned_model = cv.fit(X_train, Y_train)
-    return tuned_model
+    model = GridSearchCV(pipeline, param_grid = parameters,verbose = 3)
+    return model
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    """
+    Shows model's performance on test data
+    Args:
+    model: trained model
+    X_test: Test features
+    Y_test: Test targets
+    category_names: Target labels
+    """
+
+    # predict
+    y_pred = model.predict(X_test)
+
+    # print classification report
+    print(classification_report(Y_test.values, y_pred, target_names=category_names))
+
+    # print accuracy score
+    print('Accuracy: {}'.format(np.mean(Y_test.values == y_pred)))
 
 
 def save_model(model, model_filepath):

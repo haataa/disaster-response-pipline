@@ -40,8 +40,8 @@ def index():
     
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
+    request_counts = df.groupby('request').count()['message']
+    request_names = list(request_counts.index)
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -49,18 +49,18 @@ def index():
         {
             'data': [
                 Bar(
-                    x=genre_names,
-                    y=genre_counts
+                    x=request_names,
+                    y=request_counts
                 )
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Distribution of Message Request',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Request"
                 }
             }
         }
@@ -93,7 +93,7 @@ def go():
 
 
 def main():
-    app.run(host='0.0.0.0', port=6011, debug=True)
+    app.run(host='0.0.0.0', port=6014, debug=True)
 
 
 if __name__ == '__main__':

@@ -36,9 +36,9 @@ python data/process_data.py data/messages.csv data/categories.csv data/DisasterR
 python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
 
 ### ***Run the web app***
-1.Save the app folder in the current working directory.
-2.Run the following command in the app directory: python run.py
-3.Go to http://0.0.0.0:3001/
+1. Save the app folder in the current working directory.
+2. Run the following command in the app directory: python run.py
+3. Go to http://0.0.0.0:3001/
 
 # Screenshots
 

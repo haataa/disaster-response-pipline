@@ -29,23 +29,23 @@ app folder contain html template and run.py file to  run and render web app.
 img folder contain screen shot of the web app
 
 # Instructions<a name="Instructions"></a>
-***Run process_data.py***
+### ***Run process_data.py***
 python data/process_data.py data/messages.csv data/categories.csv data/DisasterResponse.db
 
-***Run train_classifier.py***
+### ***Run train_classifier.py***
 python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
 
-***Run the web app***
+### ***Run the web app***
 1.Save the app folder in the current working directory.
 2.Run the following command in the app directory: python run.py
 3.Go to http://0.0.0.0:3001/
 
 # Screenshots
 
-***Screenshot 1: App Front Page***
+***App Front Page***
 ![Screenshot 1](https://github.com/haataa/disaster-response-pipline/blob/master/img/WX20190613-231443%402x.png)
 
-***Screenshot 2: App Results Page***
+***App Results Page***
 ![Screenshot 2](https://github.com/haataa/disaster-response-pipline/blob/master/img/WX20190613-231622%402x.png)
 
 

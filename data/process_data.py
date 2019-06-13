@@ -39,7 +39,8 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///{}'.format(database_filename))
-    df.to_sql('messages', engine, index=False, if_exists="replace")
+    # need to add chunksize or otherwise there will be too many sql mistake
+    df.to_sql('messages', engine, index=False, if_exists="replace",chunksize=999)
 
 
 def main():

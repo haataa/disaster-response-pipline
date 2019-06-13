@@ -21,12 +21,14 @@ from sklearn.metrics import classification_report,accuracy_score
 
 
 def load_data(database_filepath):
-    engine = create_engine(database_filepath)
-    df = pd.read_sql_table('InsertTableName',engine)
+    engine = create_engine("sqlite:///{}".format(database_filepath))
+    df = pd.read_sql_table("messages", con=engine)
     #df.head()
     X = df['message'] 
     Y = df.drop(['id', 'message', 'original', 'genre'], axis = 1)
-    category_names = df.columns[-36:]
+    category_names = df.columns[-34:]
+    print(category_names)
+    print(Y.head())
     return X,Y,category_names
 
 def tokenize(text):

@@ -3,12 +3,28 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """Load csv files and return a merged dataframe
+    
+    Args:
+    messages_filepath: string. Filepath of message csv.
+    categories_filepath: string. Filepath of categories of messages.
+       
+    Returns:
+    df: dataframe. Dataframe containing merged content of messages and categories datasets.
+    """
+    
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = pd.merge(messages,categories,on ='id')
     return df
 
 def clean_data(df):
+    """Clean the dataframe 
+    Args :
+        df : dataframe to be cleaned
+    Returns :
+        df : cleaned dataframe
+    """
     # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(";",expand=True)
     # select the first row of the categories dataframe
@@ -38,6 +54,14 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """Save dataframe into an SQLite database
+    Args :
+    df : dataframe. Data to be saved
+    database_filename : string. Filename for output database.
+    
+    Returns :
+    None
+    """
     engine = create_engine('sqlite:///{}'.format(database_filename))
     # need to add chunksize or otherwise there will be too many sql mistake
     df.to_sql('messages', engine, index=False, if_exists="replace",chunksize=999)

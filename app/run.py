@@ -43,6 +43,12 @@ def index():
     request_counts = df.groupby('request').count()['message']
     request_names = list(request_counts.index)
     
+    genre_counts = df.groupby('genre').count()['message']
+    genre_names = list(genre_counts.index)
+    
+    offer_counts = df.groupby('offer').count()['message']
+    offer_names = list(offer_counts.index)
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -63,7 +69,44 @@ def index():
                     'title': "Request"
                 }
             }
+        },
+         {
+            'data': [
+                Bar(
+                    x=genre_names,
+                    y=genre_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Genres',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Genres"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=offer_names,
+                    y=offer_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Proportion of Messages by offer',
+                'yaxis': {
+                    'title': "Proportion"
+                },
+                'xaxis': {
+                    'title': "Offer"
+                }
+            }
         }
+        
     ]
     
     # encode plotly graphs in JSON
@@ -93,7 +136,7 @@ def go():
 
 
 def main():
-    app.run(host='0.0.0.0', port=6014, debug=True)
+    app.run(host='0.0.0.0', port=6016, debug=True)
 
 
 if __name__ == '__main__':
